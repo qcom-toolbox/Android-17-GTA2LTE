@@ -1,0 +1,13 @@
+//
+// SPDX-FileCopyrightText: The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// libbauthserver.so (stock fingerprint) gets this as an extra NEEDED entry
+cc_library_shared {
+    name: "libbauthtzcommon_shim",
+    srcs: ["libbauthtzcommon.c"],
+    shared_libs: ["liblog"],
+    vendor: true,
+    compile_multilib: "32",
+}

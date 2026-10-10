@@ -1,0 +1,51 @@
+From 0a1ec0f97b83dbffad5aeff51e71c7ef0a8a0c9b Mon Sep 17 00:00:00 2001
+From: qcom-toolbox <169756160+qcom-toolbox@users.noreply.github.com>
+Date: Thu, 8 Oct 2026 21:51:37 +0200
+Subject: [PATCH 5/8] bpf: inode: support renameat2(RENAME_NOREPLACE)
+
+Android's BPF loaders create maps and programs in a staging directory and
+move them into place with renameat2(RENAME_NOREPLACE). Without a rename2
+op the VFS rejects any flag with EINVAL, so netd's maps were never pinned
+and netd aborted. The VFS already fails RENAME_NOREPLACE on an existing
+target, so accept that flag and defer to simple_rename.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ kernel/bpf/inode.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/kernel/bpf/inode.c b/kernel/bpf/inode.c
+index 3af814a3..9a6c7b7d 100644
+--- a/kernel/bpf/inode.c
++++ b/kernel/bpf/inode.c
+@@ -184,12 +184,27 @@ bpf_lookup(struct inode *dir, struct dentry *dentry, unsigned flags)
+ 	return simple_lookup(dir, dentry, flags);
+ }
+ 
++/*
++ * Android's BPF loaders create objects in a staging directory and move them
++ * into place with renameat2(RENAME_NOREPLACE). The VFS has already rejected
++ * an existing target for RENAME_NOREPLACE, so only that flag is accepted.
++ */
++static int bpf_rename2(struct inode *old_dir, struct dentry *old_dentry,
++		       struct inode *new_dir, struct dentry *new_dentry,
++		       unsigned int flags)
++{
++	if (flags & ~RENAME_NOREPLACE)
++		return -EINVAL;
++	return simple_rename(old_dir, old_dentry, new_dir, new_dentry);
++}
++
+ static const struct inode_operations bpf_dir_iops = {
+ 	.lookup		= bpf_lookup,
+ 	.mknod		= bpf_mkobj,
+ 	.mkdir		= bpf_mkdir,
+ 	.rmdir		= simple_rmdir,
+ 	.rename		= simple_rename,
++	.rename2	= bpf_rename2,
+ 	.link		= simple_link,
+ 	.unlink		= simple_unlink,
+ };
+-- 
+2.53.0
+

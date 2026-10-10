@@ -1,0 +1,10 @@
+# SM-T395 hardware keys (input device "gpio_keys"). Android picks the layout
+# by device name, so gpio-keys.kl never matched; the recents key reports
+# Samsung's KEY_RECENT (254). Android 17 no longer handles the APP_SWITCH key
+# gesture, so map it to RECENT_APPS, which the launcher's overview handles.
+key 114   VOLUME_DOWN
+key 115   VOLUME_UP
+key 116   POWER
+key 158   BACK
+key 172   HOME
+key 254   RECENT_APPS

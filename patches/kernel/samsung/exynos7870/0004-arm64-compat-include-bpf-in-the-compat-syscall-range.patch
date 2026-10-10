@@ -1,0 +1,30 @@
+From 8b69eb001cd43d986515289a7ecf37c3357c1100 Mon Sep 17 00:00:00 2001
+From: qcom-toolbox <169756160+qcom-toolbox@users.noreply.github.com>
+Date: Thu, 8 Oct 2026 21:25:24 +0200
+Subject: [PATCH 4/8] arm64: compat: include bpf in the compat syscall range
+
+The eBPF backport added __NR_bpf (386) to unistd32.h but left
+__NR_compat_syscalls at 386, so the entry bounds check rejected it and
+every 32-bit bpf() call returned ENOSYS.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ arch/arm64/include/asm/unistd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+index 49c9aefd..b780c6c7 100644
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+@@ -44,7 +44,7 @@
+ #define __ARM_NR_compat_cacheflush	(__ARM_NR_COMPAT_BASE+2)
+ #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE+5)
+ 
+-#define __NR_compat_syscalls		386
++#define __NR_compat_syscalls		387
+ #endif
+ 
+ #define __ARCH_WANT_SYS_CLONE
+-- 
+2.53.0
+

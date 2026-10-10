@@ -1,0 +1,302 @@
+# All files are extracted from the stock SM-T395 firmware T395XXSDCUI7
+# (Android 9). 32-bit only: the stock userspace has no 64-bit libraries.
+
+# Samsung SLSI display/media
+# The HWC1 stack (libexynosdisplay, libhwcutils, libExynosHWCService, libmpp,
+# libhdmi, libvirtualdisplay) is built from hardware/samsung_slsi-linaro to
+# match the source-built hwcomposer.exynos7870; mixing in the stock ones
+# crashes on a struct layout mismatch.
+system/lib/libExynosOMX_Core.so:vendor/lib/libExynosOMX_Core.so
+system/lib/libExynosOMX_Resourcemanager.so:vendor/lib/libExynosOMX_Resourcemanager.so
+system/lib/libexynosgscaler.so:vendor/lib/libexynosgscaler.so
+system/lib/libexynosscaler.so:vendor/lib/libexynosscaler.so
+system/lib/libstagefrighthw.so:vendor/lib/libstagefrighthw.so
+system/lib/omx/libOMX.Exynos.AVC.Decoder.so:vendor/lib/omx/libOMX.Exynos.AVC.Decoder.so
+system/lib/omx/libOMX.Exynos.AVC.Encoder.so:vendor/lib/omx/libOMX.Exynos.AVC.Encoder.so
+system/lib/omx/libOMX.Exynos.HEVC.Decoder.so:vendor/lib/omx/libOMX.Exynos.HEVC.Decoder.so
+system/lib/omx/libOMX.Exynos.HEVC.Encoder.so:vendor/lib/omx/libOMX.Exynos.HEVC.Encoder.so
+system/lib/omx/libOMX.Exynos.MPEG4.Decoder.so:vendor/lib/omx/libOMX.Exynos.MPEG4.Decoder.so
+system/lib/omx/libOMX.Exynos.MPEG4.Encoder.so:vendor/lib/omx/libOMX.Exynos.MPEG4.Encoder.so
+system/lib/omx/libOMX.Exynos.VP8.Decoder.so:vendor/lib/omx/libOMX.Exynos.VP8.Decoder.so
+system/lib/omx/libOMX.Exynos.VP8.Encoder.so:vendor/lib/omx/libOMX.Exynos.VP8.Encoder.so
+system/lib/omx/libOMX.Exynos.WMV.Decoder.so:vendor/lib/omx/libOMX.Exynos.WMV.Decoder.so
+vendor/lib/libcsc.so
+vendor/lib/libexynosutils.so
+vendor/lib/libexynosv4l2.so
+vendor/lib/libion_exynos.so
+
+# Graphics (Mali-T830 r28p0)
+vendor/lib/egl/libGLES_mali.so
+
+# Audio
+system/lib/libSamsungPostProcessConvertor.so:vendor/lib/libSamsungPostProcessConvertor.so
+system/lib/lib_SoundAlive_SRC384_ver320.so:vendor/lib/lib_SoundAlive_SRC384_ver320.so
+system/lib/lib_soundaliveresampler.so:vendor/lib/lib_soundaliveresampler.so
+system/lib/libpreprocessing_nxp.so:vendor/lib/libpreprocessing_nxp.so
+system/lib/librecordalive.so:vendor/lib/librecordalive.so
+system/lib/libsamsungDiamondVoice.so:vendor/lib/libsamsungDiamondVoice.so
+system/lib/libsecaudioinfo.so:vendor/lib/libsecaudioinfo.so
+system/lib/libtfa98xx.so:vendor/lib/libtfa98xx.so
+vendor/etc/nxp/AzControlParams_SPEAKER.txt
+vendor/etc/nxp/LVAZFS_Configuration.txt
+vendor/etc/nxp/speechassist/BargeIn/Tx_ControlParams_WIDEBAND_ANALOG_DOCK.txt
+vendor/etc/nxp/speechassist/BargeIn/Tx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/speechassist/BargeIn/Tx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/speechassist/BargeIn/Tx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/speechassist/BargeIn/Tx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/speechassist/BargeIn/Tx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/speechassist/BargeInDriving/Tx_ControlParams_WIDEBAND_ANALOG_DOCK.txt
+vendor/etc/nxp/speechassist/BargeInDriving/Tx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/speechassist/BargeInDriving/Tx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/speechassist/BargeInDriving/Tx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/speechassist/BargeInDriving/Tx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/speechassist/BargeInDriving/Tx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/speechassist/LVVEFS_Rx_Configuration.txt
+vendor/etc/nxp/speechassist/LVVEFS_Tx_Configuration.txt
+vendor/etc/nxp/speechassist/default/Rx_ControlParams_EARPIECE_16000Hz.txt
+vendor/etc/nxp/speechassist/default/Rx_ControlParams_SPEAKER_16000Hz.txt
+vendor/etc/nxp/speechassist/default/Tx_ControlParams_EARPIECE_16000Hz.txt
+vendor/etc/nxp/speechassist/default/Tx_ControlParams_SPEAKER_16000Hz.txt
+vendor/etc/nxp/voiceexperience/LVVEFS_Rx_Configuration.txt
+vendor/etc/nxp/voiceexperience/LVVEFS_Tx_Configuration.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Rx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Rx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET_NREC_ON.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Rx_ControlParams_NARROWBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Rx_ControlParams_NARROWBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Rx_ControlParams_NARROWBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Rx_ControlParams_NARROWBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Rx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Rx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET_NREC_ON.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Rx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Rx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Rx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Rx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Tx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Tx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET_NREC_ON.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Tx_ControlParams_NARROWBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Tx_ControlParams_NARROWBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Tx_ControlParams_NARROWBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Tx_ControlParams_NARROWBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Tx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Tx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET_NREC_ON.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Tx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Tx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Tx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/VideoTelephony/Tx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Rx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Rx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET_NREC_ON.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Rx_ControlParams_NARROWBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Rx_ControlParams_NARROWBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Rx_ControlParams_NARROWBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Rx_ControlParams_NARROWBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Rx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Rx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET_NREC_ON.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Rx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Rx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Rx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Rx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Tx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Tx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET_NREC_ON.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Tx_ControlParams_NARROWBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Tx_ControlParams_NARROWBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Tx_ControlParams_NARROWBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Tx_ControlParams_NARROWBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Tx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Tx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET_NREC_ON.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Tx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Tx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Tx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/WifiCalling/Tx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Rx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Rx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET_NREC_ON.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Rx_ControlParams_NARROWBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Rx_ControlParams_NARROWBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Rx_ControlParams_NARROWBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Rx_ControlParams_NARROWBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Rx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Rx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET_NREC_ON.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Rx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Rx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Rx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Rx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Tx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Tx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET_NREC_ON.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Tx_ControlParams_NARROWBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Tx_ControlParams_NARROWBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Tx_ControlParams_NARROWBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Tx_ControlParams_NARROWBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Tx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Tx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET_NREC_ON.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Tx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Tx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Tx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/WifiCallingHAC/Tx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Rx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Rx_ControlParams_NARROWBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Rx_ControlParams_NARROWBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Rx_ControlParams_NARROWBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Rx_ControlParams_NARROWBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Rx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Rx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Rx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Rx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Rx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Tx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Tx_ControlParams_NARROWBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Tx_ControlParams_NARROWBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Tx_ControlParams_NARROWBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Tx_ControlParams_NARROWBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Tx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Tx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Tx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Tx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/mVoIP/Tx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPFMC/Rx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPFMC/Rx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/mVoIPFMC/Rx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/mVoIPFMC/Rx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/mVoIPFMC/Rx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPFMC/Tx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPFMC/Tx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/mVoIPFMC/Tx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/mVoIPFMC/Tx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/mVoIPFMC/Tx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Rx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Rx_ControlParams_NARROWBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Rx_ControlParams_NARROWBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Rx_ControlParams_NARROWBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Rx_ControlParams_NARROWBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Rx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Rx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Rx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Rx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Rx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Tx_ControlParams_NARROWBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Tx_ControlParams_NARROWBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Tx_ControlParams_NARROWBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Tx_ControlParams_NARROWBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Tx_ControlParams_NARROWBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Tx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Tx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Tx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Tx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/mVoIPHAC/Tx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPSec/Rx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPSec/Rx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/mVoIPSec/Rx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/mVoIPSec/Rx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/mVoIPSec/Rx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPSec/Tx_ControlParams_WIDEBAND_BLUETOOTH_SCO_HEADSET.txt
+vendor/etc/nxp/voiceexperience/mVoIPSec/Tx_ControlParams_WIDEBAND_EARPIECE.txt
+vendor/etc/nxp/voiceexperience/mVoIPSec/Tx_ControlParams_WIDEBAND_SPEAKER.txt
+vendor/etc/nxp/voiceexperience/mVoIPSec/Tx_ControlParams_WIDEBAND_WIRED_HEADPHONE.txt
+vendor/etc/nxp/voiceexperience/mVoIPSec/Tx_ControlParams_WIDEBAND_WIRED_HEADSET.txt
+vendor/lib/libLifevibes_lvverx.so
+vendor/lib/libLifevibes_lvvetx.so
+
+# DRM
+vendor/bin/wvkprov
+vendor/lib/liboemcrypto.so
+vendor/lib/libwvhidl.so
+-vendor/lib/mediadrm/libdrmclearkeyplugin.so
+vendor/lib/mediadrm/libwvdrmengine.so
+
+# GNSS
+-vendor/bin/hw/gpsd
+vendor/etc/gnss/ca.pem
+vendor/etc/gnss/gps.cfg
+# init.gps.rc: own copy in rootdir/etc (preloads libshim_gpsd)
+# GNSS HAL: AOSP android.hardware.gnss@1.0-service/-impl on top of the stock
+# gps.default.so; Samsung's GNSS service and its Android 9 HIDL interface
+# library reference gBnConstructorMap, which Android 10 removed.
+-vendor/lib/libwrappergps.so
+
+# TrustZone (MobiCore) apps
+system/app/mcRegistry/ffffffff00000000000000000000000c.tlbin:vendor/app/mcRegistry/ffffffff00000000000000000000000c.tlbin
+system/app/mcRegistry/ffffffff00000000000000000000000d.tlbin:vendor/app/mcRegistry/ffffffff00000000000000000000000d.tlbin
+system/app/mcRegistry/ffffffff000000000000000000000045.tlbin:vendor/app/mcRegistry/ffffffff000000000000000000000045.tlbin
+system/app/mcRegistry/ffffffff000000000000000000000059.tlbin:vendor/app/mcRegistry/ffffffff000000000000000000000059.tlbin
+system/app/mcRegistry/ffffffff000000000000000000000060.tlbin:vendor/app/mcRegistry/ffffffff000000000000000000000060.tlbin
+vendor/app/mcRegistry/00060308060501020000000000000000.tlbin
+vendor/app/mcRegistry/07010000000000000000000000000000.tlbin
+vendor/app/mcRegistry/08130000000000000000000000000000.tlbin
+vendor/app/mcRegistry/FFFFFFFF000000000000000000000001.drbin
+vendor/app/mcRegistry/ffffffff000000000000000000000005.tlbin
+vendor/app/mcRegistry/ffffffff00000000000000000000000a.tlbin
+vendor/app/mcRegistry/ffffffff00000000000000000000000b.tlbin
+vendor/app/mcRegistry/ffffffff00000000000000000000000f.tlbin
+vendor/app/mcRegistry/ffffffff000000000000000000000012.tlbin
+vendor/app/mcRegistry/ffffffff000000000000000000000013.tlbin
+vendor/app/mcRegistry/ffffffff00000000000000000000002f.tlbin
+vendor/app/mcRegistry/ffffffff000000000000000000000038.tlbin
+vendor/app/mcRegistry/ffffffff000000000000000000000041.tlbin
+vendor/app/mcRegistry/ffffffffd0000000000000000000000a.tlbin
+vendor/app/mcRegistry/ffffffffd0000000000000000000000e.tlbin
+vendor/app/mcRegistry/ffffffffd00000000000000000000016.tlbin
+vendor/app/mcRegistry/ffffffffd00000000000000000000062.tlbin
+
+# Radio
+system/etc/floating_feature.xml:vendor/etc/floating_feature.xml
+system/etc/mtu-conf.xml:vendor/etc/mtu-conf.xml
+system/etc/pdpcnt-conf.xml:vendor/etc/pdpcnt-conf.xml
+system/lib/libaudio-ril.so:vendor/lib/libaudio-ril.so
+-vendor/bin/hw/rild
+vendor/etc/plmn_delta.bin
+vendor/etc/plmn_delta_hktw.bin
+vendor/etc/plmn_se13.bin
+# libsec-ril.so, libfloatingfeature.so and libsecnativefeature.so come from
+# vendor/samsung/universal7870-common/radio (radio
+# HIDL 1.4, which Android 17 needs; the stock Android 9 RIL is 1.2).
+vendor/lib/libvndsecril-client.so
+
+# Audio: stock codec routing for the OSS audio HAL
+system/etc/mixer_gains.xml:vendor/etc/mixer_gains.xml
+
+# Media firmware
+vendor/firmware/mfc_fw.bin
+
+# Sensors
+vendor/lib/hw/sensors.universal7870.so
+-system/lib/libsensorlistener.so:vendor/lib/libsensorlistener.so
+
+# GNSS (tablet versions)
+-vendor/lib/hw/gps.default.so
+
+# Audio (tablet versions)
+vendor/etc/Tfa9890.cnt
+
+# Radio (tablet versions)
+
+# Firmware: Wi-Fi/BT (QCA9377), camera setfiles, MFC, NFC
+system/etc/firmware/Data.msc:vendor/etc/firmware/Data.msc
+system/etc/firmware/bdwlan30.bin:vendor/etc/firmware/bdwlan30.bin
+system/etc/firmware/bdwlan32.bin:vendor/etc/firmware/bdwlan32.bin
+system/etc/firmware/nvm_tlv_tf_1.1.bin:vendor/etc/firmware/nvm_tlv_tf_1.1.bin
+system/etc/firmware/otp30.bin:vendor/etc/firmware/otp30.bin
+system/etc/firmware/qwlan30.bin:vendor/etc/firmware/qwlan30.bin
+system/etc/firmware/qwlan30_ibss.bin:vendor/etc/firmware/qwlan30_ibss.bin
+system/etc/firmware/rampatch_tlv_tf_1.1.tlv:vendor/etc/firmware/rampatch_tlv_tf_1.1.tlv
+system/etc/firmware/utf30.bin:vendor/etc/firmware/utf30.bin
+system/etc/firmware/utfbd30.bin:vendor/etc/firmware/utfbd30.bin
+system/etc/firmware/utfbd32.bin:vendor/etc/firmware/utfbd32.bin
+system/etc/firmware/wlan/WCNSS_cfg.dat:vendor/etc/firmware/wlan/WCNSS_cfg.dat
+system/etc/firmware/wlan/grippower.info:vendor/etc/firmware/wlan/grippower.info
+system/etc/firmware/wlan/qcom_cfg.ini:vendor/etc/firmware/wlan/qcom_cfg.ini
+vendor/firmware/fimc_is_lib.bin
+vendor/firmware/nfc/sec_s3nrn81_firmware.bin
+vendor/firmware/setfile_4h5yc.bin
+vendor/firmware/setfile_5e3.bin
+
+# Fingerprint (Synaptics VIPER): stock bauth libraries; libbauthserver.so gets
+# libbauthtzcommon_shim.so added as a NEEDED entry (patchelf --add-needed)
+vendor/lib/libbauthserver.so
+vendor/lib/libbauthtzcommon.so
+vendor/lib/libegis_fp_normal_sensor_test.so
+vendor/lib/libgf_in_system_lib.so
+vendor/lib/libqfp_sensortest.so
+vendor/lib/libsynaFpSensorTestNwd.so
+
+# MobiCore trustlets
+vendor/app/mcRegistry/07060000000000000000000000000000.tlbin
+vendor/app/mcRegistry/ffffffff00000000000000000000000e.tlbin
+vendor/app/mcRegistry/ffffffff000000000000000000000017.tlbin

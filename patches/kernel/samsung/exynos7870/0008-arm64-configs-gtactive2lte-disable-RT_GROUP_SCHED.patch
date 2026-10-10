@@ -1,0 +1,30 @@
+From 3301f54ba9dd89a09dbf55e41564f0d77b67d23c Mon Sep 17 00:00:00 2001
+From: qcom-toolbox <169756160+qcom-toolbox@users.noreply.github.com>
+Date: Sat, 10 Oct 2026 02:18:29 +0200
+Subject: [PATCH 8/8] arm64: configs: gtactive2lte: disable RT_GROUP_SCHED
+
+Android's Bluetooth HAL asks for SCHED_FIFO, which fails with EPERM when
+RT group scheduling gives the cgroup no RT runtime.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01YHmiQGxHgHmd9D8TNUemvH
+---
+ arch/arm64/configs/exynos7870-gtactive2lte_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/configs/exynos7870-gtactive2lte_defconfig b/arch/arm64/configs/exynos7870-gtactive2lte_defconfig
+index ec7e5fec..b6380ba0 100644
+--- a/arch/arm64/configs/exynos7870-gtactive2lte_defconfig
++++ b/arch/arm64/configs/exynos7870-gtactive2lte_defconfig
+@@ -14,7 +14,7 @@ CONFIG_RESOURCE_COUNTERS=y
+ CONFIG_MEMCG=y
+ CONFIG_MEMCG_SWAP=y
+ CONFIG_CGROUP_SCHED=y
+-CONFIG_RT_GROUP_SCHED=y
++# CONFIG_RT_GROUP_SCHED is not set
+ CONFIG_CGROUP_BPF=y
+ CONFIG_NAMESPACES=y
+ CONFIG_BLK_DEV_INITRD=y
+-- 
+2.53.0
+

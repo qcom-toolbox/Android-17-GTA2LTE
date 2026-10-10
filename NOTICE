@@ -1,0 +1,37 @@
+Android 17 device tree for the Samsung Galaxy Tab Active2 LTE (SM-T395, gtactive2lte)
+
+This tree is built on and derived from:
+  - The Android Open Source Project - https://source.android.com
+  - LineageOS - https://github.com/LineageOS
+  - Evolution X - https://github.com/Evolution-X
+  - samsungexynos7870 (universal7870-common, a3y17lte, kernel and
+    hardware/samsung_slsi-linaro trees) - https://github.com/samsungexynos7870
+
+Unless a file says otherwise, it is licensed under the Apache License,
+Version 2.0 (see LICENSE). Files that carry their own copyright and license
+header keep it:
+  - hardware/tfa98xx: NXP Semiconductors, Apache License 2.0
+  - hardware/cpboot: inherited unchanged from the samsungexynos7870 trees;
+    hdlc.c/hdlc.h carry QUALCOMM copyright notices
+  - hardware/audio_route, hardware/tinyalsa, hardware/wifi, libbt-vendor:
+    see the NOTICE file in each directory
+
+--------------------------------------------------------------------------
+
+prebuilt/Image and prebuilt/dt.img are the Linux kernel and device tree
+blob, licensed under the GNU General Public License, version 2. They are
+built by tools/build-kernel.sh from
+  https://github.com/samsungexynos7870/android_kernel_samsung_exynos7870
+  branch lineage-22.2, commit 12219db9f047fe5a6a3474e7522a3ad61bcb273a
+with patches/kernel/samsung/exynos7870 applied on top. The patches under
+patches/kernel are GPL-2.0 like the kernel they apply to.
+
+The patches for other AOSP/LineageOS projects under patches/ are under the
+license of the project they apply to (Apache License 2.0 for all of them).
+
+Proprietary vendor files are not part of this repository. They are
+extracted from a stock SM-T395 firmware (T395XXSDCUI7) by extract-files.py,
+except for the RIL libraries listed in proprietary-files.txt, which come from
+vendor/samsung/universal7870-common. They remain the property of Samsung and
+their respective owners. Release images that contain them are provided for
+owners of the device only.

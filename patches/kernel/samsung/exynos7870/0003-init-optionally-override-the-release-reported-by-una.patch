@@ -1,0 +1,74 @@
+From 076c00f7b57d535896acb0af909e67b91c26d54a Mon Sep 17 00:00:00 2001
+From: qcom-toolbox <169756160+qcom-toolbox@users.noreply.github.com>
+Date: Thu, 8 Oct 2026 21:11:49 +0200
+Subject: [PATCH 3/8] init: optionally override the release reported by
+ uname(2)
+
+Android's NetBpfLoad and netd refuse kernels older than 4.9 and gate
+program loading on the uname release. This kernel has eBPF backported,
+so let it report a 4.9 release (CONFIG_UNAME_OVERRIDE_STRING) without
+touching the compile-time version macros the drivers depend on.
+
+gtactive2lte_defconfig: report 4.9.140-gtactive2lte.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ .../configs/exynos7870-gtactive2lte_defconfig      |  2 ++
+ init/Kconfig                                       | 14 ++++++++++++++
+ init/version.c                                     |  4 ++++
+ 3 files changed, 20 insertions(+)
+
+diff --git a/arch/arm64/configs/exynos7870-gtactive2lte_defconfig b/arch/arm64/configs/exynos7870-gtactive2lte_defconfig
+index cdab0616..ec7e5fec 100644
+--- a/arch/arm64/configs/exynos7870-gtactive2lte_defconfig
++++ b/arch/arm64/configs/exynos7870-gtactive2lte_defconfig
+@@ -640,3 +640,5 @@ CONFIG_CRYPTO_SHA1_ARM64_CE=y
+ CONFIG_CRYPTO_SHA2_ARM64_CE=y
+ CONFIG_CRYPTO_AES_ARM64_CE=y
+ CONFIG_CRYPTO_AES_ARM64_CE_BLK=y
++CONFIG_UNAME_OVERRIDE=y
++CONFIG_UNAME_OVERRIDE_STRING="4.9.140-gtactive2lte"
+diff --git a/init/Kconfig b/init/Kconfig
+index d68ec24d..fe79d074 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -67,6 +67,20 @@ config COMPILE_TEST
+ 	  here. If you are a user/distributor, say N here to exclude useless
+ 	  drivers to be distributed.
+ 
++config UNAME_OVERRIDE
++	bool "Override the kernel release reported by uname(2)"
++	default n
++	help
++	  Report UNAME_OVERRIDE_STRING as the kernel release in uname(2).
++	  Compile-time version macros are unchanged. Used to let Android
++	  userspace that gates eBPF on the kernel version run on this kernel,
++	  which has eBPF backported.
++
++config UNAME_OVERRIDE_STRING
++	string "Kernel release reported by uname(2)"
++	depends on UNAME_OVERRIDE
++	default ""
++
+ config LOCALVERSION
+ 	string "Local version - append to kernel release"
+ 	help
+diff --git a/init/version.c b/init/version.c
+index 1a4718e5..1abc30f1 100644
+--- a/init/version.c
++++ b/init/version.c
+@@ -29,7 +29,11 @@ struct uts_namespace init_uts_ns = {
+ 	.name = {
+ 		.sysname	= UTS_SYSNAME,
+ 		.nodename	= UTS_NODENAME,
++#ifdef CONFIG_UNAME_OVERRIDE
++		.release	= CONFIG_UNAME_OVERRIDE_STRING,
++#else
+ 		.release	= UTS_RELEASE,
++#endif
+ 		.version	= UTS_VERSION,
+ 		.machine	= UTS_MACHINE,
+ 		.domainname	= UTS_DOMAINNAME,
+-- 
+2.53.0
+
