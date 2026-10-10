@@ -1,0 +1,49 @@
+From: qcom-toolbox <169756160+qcom-toolbox@users.noreply.github.com>
+Subject: [PATCH] Don't abort when per-app process groups can't be created
+
+Linux 3.18 (Galaxy Tab Active2, Exynos 7870) has no cgroup v2, so the
+uid_*/pid_* process groups under /sys/fs/cgroup can't be created. The
+zygote child aborted and ActivityManager asserted on that failure, so no
+app could start. Log the failure and run the app without a group, as
+devices did before cgroup v2. Based on the samsungexynos7870 community
+patches for Android 15.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+diff --git a/core/jni/com_android_internal_os_Zygote.cpp b/core/jni/com_android_internal_os_Zygote.cpp
+index 15a7ee4a0..c22f380b9 100644
+--- a/core/jni/com_android_internal_os_Zygote.cpp
++++ b/core/jni/com_android_internal_os_Zygote.cpp
+@@ -1985,10 +1985,9 @@ static void SpecializeCommon(JNIEnv* env, uid_t uid, gid_t gid, jintArray gids,
+     if (getuid() == 0) {
+         const int rc = createProcessGroup(uid, getpid());
+         if (rc != 0) {
+-            fail_fn(rc == -EROFS ? CREATE_ERROR("createProcessGroup failed, kernel missing "
+-                                                "CONFIG_CGROUP_CPUACCT?")
+-                                 : CREATE_ERROR("createProcessGroup(%d, %d) failed: %s", uid,
+-                                                /* pid= */ 0, strerror(-rc)));
++            // Kernels without cgroup v2 (3.18) can't create the per-app
++            // process groups; run the app without one instead of aborting.
++            ALOGE("createProcessGroup(%d, %d) failed: %s", uid, /* pid= */ 0, strerror(-rc));
+         }
+ 
+         if (is_system_server) {
+diff --git a/services/core/java/com/android/server/am/ProcessList.java b/services/core/java/com/android/server/am/ProcessList.java
+index 718d3a6a9..0957b9cd6 100644
+--- a/services/core/java/com/android/server/am/ProcessList.java
++++ b/services/core/java/com/android/server/am/ProcessList.java
+@@ -2740,11 +2740,9 @@ public final class ProcessList extends ProcessListInternal
+                             String errorStr = "Unable to create process group for "
+                                 + app.processName + " (uid: " + uid + ", pid: " + startResult.pid
+                                 + "), errno: " + res;
+-                            if (res == -OsConstants.ESRCH) {
+-                                Slog.e(ActivityManagerService.TAG, errorStr);
+-                            } else {
+-                                throw new AssertionError(errorStr);
+-                            }
++                            // Kernels without cgroup v2 (3.18) can't create
++                            // process groups: log instead of asserting.
++                            Slog.e(ActivityManagerService.TAG, errorStr);
+                         } else {
+                             app.mProcessGroupCreated = true;
+                         }

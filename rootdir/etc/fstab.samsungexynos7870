@@ -1,0 +1,18 @@
+# Android fstab file for the Galaxy Tab Active2 LTE (SM-T395).
+#
+# The PIT is stock, so this layout reuses existing partitions:
+#   SYSTEM (3 GB)  -> /system  (system, system_ext and product)
+#   CACHE (200 MB) -> /vendor  (the tablet has no VENDOR partition)
+#   HIDDEN (100 MB, Samsung preloads) -> /cache
+#
+# <src>                                                   <mnt_point>      <type> <mnt_flags and options>                                                                  <fs_mgr_flags>
+/dev/block/platform/13540000.dwmmc0/by-name/SYSTEM        /system          ext4   ro,errors=panic                                                                          wait,first_stage_mount
+/dev/block/platform/13540000.dwmmc0/by-name/CACHE         /vendor          ext4   ro,errors=panic                                                                          wait,first_stage_mount
+/dev/block/platform/13540000.dwmmc0/by-name/HIDDEN        /cache           ext4   noatime,nosuid,nodev,noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic  wait,check,formattable
+/dev/block/platform/13540000.dwmmc0/by-name/USERDATA      /data            ext4   noatime,nosuid,nodev,noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic  wait,check,formattable,reservedsize=128M,length=-16384
+/dev/block/platform/13540000.dwmmc0/by-name/USERDATA      /data            f2fs   noatime,nosuid,nodev,discard,inline_xattr                                                wait,check,formattable,reservedsize=128M,length=-16384
+/dev/block/platform/13540000.dwmmc0/by-name/EFS           /mnt/vendor/efs  ext4   noatime,nosuid,nodev,noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic  wait,check
+/dev/block/platform/13540000.dwmmc0/by-name/CPEFS         /mnt/vendor/cpefs ext4  noatime,nosuid,nodev,noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic  wait,check,nofail
+
+/devices/13560000.dwmmc2/mmc_host/mmc*                    auto             auto   defaults                                                                                 voldmanaged=sdcard1:auto
+/devices/13600000.usb/13600000.dwc3/xhci-hcd.2.auto/usb*  auto             auto   defaults                                                                                 voldmanaged=usb:auto

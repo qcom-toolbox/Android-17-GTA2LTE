@@ -1,0 +1,169 @@
+From 90964182a7aa5e624556e286db26acb24b22d5c3 Mon Sep 17 00:00:00 2001
+From: qcom-toolbox <169756160+qcom-toolbox@users.noreply.github.com>
+Date: Fri, 9 Oct 2026 19:47:34 +0200
+Subject: [PATCH 6/8] input: fts, wacom: follow the display across
+ blank/unblank
+
+Both drivers only power their controller down and back up from the input
+device's open/close callbacks, which Samsung's framework drove on every
+screen off/on. AOSP keeps the device open, so after the panel powered
+down the touchscreen never came back. Stop the controller on
+FB_EARLY_EVENT_BLANK(POWERDOWN) and restart it on FB_EVENT_BLANK(UNBLANK)
+while userspace has the device open.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ drivers/input/touchscreen/stm/fts_ts.c | 35 ++++++++++++++++++++++++++
+ drivers/input/touchscreen/stm/fts_ts.h |  1 +
+ drivers/input/wacom/wacom.h            |  1 +
+ drivers/input/wacom/wacom_i2c.c        | 29 +++++++++++++++++++++
+ 4 files changed, 66 insertions(+)
+
+diff --git a/drivers/input/touchscreen/stm/fts_ts.c b/drivers/input/touchscreen/stm/fts_ts.c
+index 6db72130..3d431a4c 100755
+--- a/drivers/input/touchscreen/stm/fts_ts.c
++++ b/drivers/input/touchscreen/stm/fts_ts.c
+@@ -45,6 +45,7 @@
+ #include <linux/ctype.h>
+ #include <linux/gpio.h>
+ #include <linux/i2c.h>
++#include <linux/fb.h>
+ #include <linux/i2c-dev.h>
+ #include <linux/fs.h>
+ #include <linux/uaccess.h>
+@@ -110,6 +111,8 @@ enum TOUCH_MODE {
+ #ifdef USE_OPEN_CLOSE
+ static int fts_input_open(struct input_dev *dev);
+ static void fts_input_close(struct input_dev *dev);
++static int fts_fb_notifier_cb(struct notifier_block *nb,
++			      unsigned long event, void *data);
+ #ifdef USE_OPEN_DWORK
+ static void fts_open_work(struct work_struct *work);
+ #endif
+@@ -2965,6 +2968,10 @@ static int fts_probe(struct i2c_client *client, const struct i2c_device_id *idp)
+ 
+ 	device_init_wakeup(&client->dev, true);
+ 	info->probe_done = true;
++
++	info->fb_notif.notifier_call = fts_fb_notifier_cb;
++	if (fb_register_client(&info->fb_notif))
++		input_err(true, &client->dev, "%s: failed to register fb notifier\n", __func__);
+ #ifdef FTS_SUPPORT_STRINGLIB
+ 	fts_check_custom_library(info);
+ #endif
+@@ -3203,6 +3210,34 @@ static void fts_input_close(struct input_dev *dev)
+ 	info->retry_hover_enable_after_wakeup = 0;
+ #endif
+ }
++
++/*
++ * AOSP never closes and reopens the touch input device around screen off/on
++ * (Samsung's framework did, via input open/close or the "enabled" node).
++ * Stop the controller before the panel powers down and restart it on
++ * unblank, but only while userspace has the device open.
++ */
++static int fts_fb_notifier_cb(struct notifier_block *nb,
++			      unsigned long event, void *data)
++{
++	struct fts_ts_info *info = container_of(nb, struct fts_ts_info, fb_notif);
++	struct fb_event *evdata = data;
++	int blank;
++
++	if (!evdata || !evdata->data || !info->probe_done || !info->input_dev)
++		return NOTIFY_DONE;
++
++	blank = *(int *)evdata->data;
++	if (!info->input_dev->users)
++		return NOTIFY_DONE;
++
++	if (event == FB_EARLY_EVENT_BLANK && blank == FB_BLANK_POWERDOWN)
++		fts_input_close(info->input_dev);
++	else if (event == FB_EVENT_BLANK && blank == FB_BLANK_UNBLANK)
++		fts_input_open(info->input_dev);
++
++	return NOTIFY_DONE;
++}
+ #endif
+ 
+ #if 0//def CONFIG_SEC_FACTORY
+diff --git a/drivers/input/touchscreen/stm/fts_ts.h b/drivers/input/touchscreen/stm/fts_ts.h
+index 8243d347..450d4987 100755
+--- a/drivers/input/touchscreen/stm/fts_ts.h
++++ b/drivers/input/touchscreen/stm/fts_ts.h
+@@ -488,6 +488,7 @@ struct fts_i2c_platform_data {
+ 
+ struct fts_ts_info {
+ 	struct device *dev;
++	struct notifier_block fb_notif;
+ 	struct i2c_client *client;
+ 	struct input_dev *input_dev;
+ 	struct input_dev *input_dev_pad;
+diff --git a/drivers/input/wacom/wacom.h b/drivers/input/wacom/wacom.h
+index e92ab04e..cb818e4f 100755
+--- a/drivers/input/wacom/wacom.h
++++ b/drivers/input/wacom/wacom.h
+@@ -220,6 +220,7 @@ struct epen_pos {
+ 
+ 
+ struct wacom_i2c {
++	struct notifier_block fb_notif;
+ 	struct i2c_client *client;
+ 	struct i2c_client *client_boot;
+ 	struct input_dev *input_dev;
+diff --git a/drivers/input/wacom/wacom_i2c.c b/drivers/input/wacom/wacom_i2c.c
+index 03155fca..2a055793 100755
+--- a/drivers/input/wacom/wacom_i2c.c
++++ b/drivers/input/wacom/wacom_i2c.c
+@@ -29,6 +29,7 @@
+ #include <linux/of_gpio.h>
+ #include <linux/sec_sysfs.h>
+ #include <linux/usb/manager/usb_typec_manager_notifier.h>
++#include <linux/fb.h>
+ 
+ #include "wacom.h"
+ 
+@@ -1846,6 +1847,30 @@ static void wacom_i2c_input_close(struct input_dev *dev)
+ 	wacom_sleep_sequence(wac_i2c);
+ }
+ 
++/* Same as the touchscreen: follow the display, since AOSP never closes the
++ * input device around screen off/on. */
++static int wacom_fb_notifier_cb(struct notifier_block *nb,
++				unsigned long event, void *data)
++{
++	struct wacom_i2c *wac_i2c = container_of(nb, struct wacom_i2c, fb_notif);
++	struct fb_event *evdata = data;
++	int blank;
++
++	if (!evdata || !evdata->data || !wac_i2c->input_dev)
++		return NOTIFY_DONE;
++
++	blank = *(int *)evdata->data;
++	if (!wac_i2c->input_dev->users)
++		return NOTIFY_DONE;
++
++	if (event == FB_EARLY_EVENT_BLANK && blank == FB_BLANK_POWERDOWN)
++		wacom_i2c_input_close(wac_i2c->input_dev);
++	else if (event == FB_EVENT_BLANK && blank == FB_BLANK_UNBLANK)
++		wacom_i2c_input_open(wac_i2c->input_dev);
++
++	return NOTIFY_DONE;
++}
++
+ static void wacom_i2c_set_input_values(struct wacom_i2c *wac_i2c,
+ 				       struct input_dev *input_dev, u8 propbit)
+ {
+@@ -2942,6 +2967,10 @@ static int wacom_i2c_probe(struct i2c_client *client,
+ 		schedule_delayed_work(&wac_i2c->typec_nb_reg_work, msecs_to_jiffies(10));
+ 	}
+ 
++	wac_i2c->fb_notif.notifier_call = wacom_fb_notifier_cb;
++	if (fb_register_client(&wac_i2c->fb_notif))
++		input_err(true, &client->dev, "%s: failed to register fb notifier\n", __func__);
++
+ 	input_info(true, &client->dev, "probe done\n");
+ 
+ 	return 0;
+-- 
+2.53.0
+

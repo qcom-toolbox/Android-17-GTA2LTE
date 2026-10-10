@@ -1,0 +1,51 @@
+From 25b07f64621f44eb4ad03a17182f4b4949e5c3e1 Mon Sep 17 00:00:00 2001
+From: qcom-toolbox <169756160+qcom-toolbox@users.noreply.github.com>
+Date: Fri, 9 Oct 2026 20:22:36 +0200
+Subject: [PATCH 7/8] input: fts, wacom: only read the blank mode from blank
+ events
+
+decon sends its own frame events down the fb notifier chain whose data is
+not an int blank mode; dereferencing it panicked at boot.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01YHmiQGxHgHmd9D8TNUemvH
+---
+ drivers/input/touchscreen/stm/fts_ts.c | 5 +++++
+ drivers/input/wacom/wacom_i2c.c        | 5 +++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/drivers/input/touchscreen/stm/fts_ts.c b/drivers/input/touchscreen/stm/fts_ts.c
+index 3d431a4c..76e96583 100755
+--- a/drivers/input/touchscreen/stm/fts_ts.c
++++ b/drivers/input/touchscreen/stm/fts_ts.c
+@@ -3227,6 +3227,11 @@ static int fts_fb_notifier_cb(struct notifier_block *nb,
+ 	if (!evdata || !evdata->data || !info->probe_done || !info->input_dev)
+ 		return NOTIFY_DONE;
+ 
++	/* decon also sends its own frame events down this chain; only the two
++	 * blank events carry an int blank mode */
++	if (event != FB_EARLY_EVENT_BLANK && event != FB_EVENT_BLANK)
++		return NOTIFY_DONE;
++
+ 	blank = *(int *)evdata->data;
+ 	if (!info->input_dev->users)
+ 		return NOTIFY_DONE;
+diff --git a/drivers/input/wacom/wacom_i2c.c b/drivers/input/wacom/wacom_i2c.c
+index 2a055793..afb175bd 100755
+--- a/drivers/input/wacom/wacom_i2c.c
++++ b/drivers/input/wacom/wacom_i2c.c
+@@ -1859,6 +1859,11 @@ static int wacom_fb_notifier_cb(struct notifier_block *nb,
+ 	if (!evdata || !evdata->data || !wac_i2c->input_dev)
+ 		return NOTIFY_DONE;
+ 
++	/* decon also sends its own frame events down this chain; only the two
++	 * blank events carry an int blank mode */
++	if (event != FB_EARLY_EVENT_BLANK && event != FB_EVENT_BLANK)
++		return NOTIFY_DONE;
++
+ 	blank = *(int *)evdata->data;
+ 	if (!wac_i2c->input_dev->users)
+ 		return NOTIFY_DONE;
+-- 
+2.53.0
+

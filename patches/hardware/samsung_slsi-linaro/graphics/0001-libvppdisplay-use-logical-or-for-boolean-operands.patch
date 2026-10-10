@@ -1,0 +1,22 @@
+From: qcom-toolbox <169756160+qcom-toolbox@users.noreply.github.com>
+Subject: [PATCH] libvppdisplay: use logical or for boolean operands
+
+Android 17 clang errors on bitwise | with bool operands
+(-Wbitwise-instead-of-logical). The right operand has no side effects,
+so || is equivalent.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+diff --git a/base/libhwc1/libvppdisplay/ExynosDisplay.cpp b/base/libhwc1/libvppdisplay/ExynosDisplay.cpp
+index cc34fe6..31ab5ef 100644
+--- a/base/libhwc1/libvppdisplay/ExynosDisplay.cpp
++++ b/base/libhwc1/libvppdisplay/ExynosDisplay.cpp
+@@ -2788,7 +2788,7 @@ void ExynosDisplay::determineBandwidthSupport(hwc_display_contents_1_t *contents
+                     directFbNum++;
+                 DISPLAY_LOGD(eDebugResourceAssigning, "layer(%zu) is directFB", i);
+             } else if (can_compose && isOverlaySupported(layer, i,
+-                        !isProcessingRequired(layer) |
++                        !isProcessingRequired(layer) ||
+                         (directFbNum >= mInternalDMAs.size() && !(mUseSecureDMA && isTopLayer)),
+                         &supportedInternalMPP, &supportedExternalMPP)) {
+                 DISPLAY_LOGD(eDebugResourceAssigning, "layer(%zu) is OVERLAY ",i);

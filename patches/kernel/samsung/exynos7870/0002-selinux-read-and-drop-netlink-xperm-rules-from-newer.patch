@@ -1,0 +1,61 @@
+From 860c6ad81e3b5fffc61297940ada94095ec9d210 Mon Sep 17 00:00:00 2001
+From: qcom-toolbox <169756160+qcom-toolbox@users.noreply.github.com>
+Date: Thu, 8 Oct 2026 20:54:46 +0200
+Subject: [PATCH 2/8] selinux: read and drop netlink xperm rules from newer
+ policies
+
+Android 15+ policies carry allowxperm rules for netlink message types
+(xperms specified = 3). The Android M compatibility path treated them as
+the old format, read one byte short and desynchronised the avtab, so
+loading the Android 17 policy panicked with 'invalid type or class'.
+
+Read these entries with the current layout and drop them; this kernel
+does not enforce netlink xperms.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ security/selinux/ss/avtab.c | 7 +++++++
+ security/selinux/ss/avtab.h | 2 ++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/security/selinux/ss/avtab.c b/security/selinux/ss/avtab.c
+index 640c16b9..449f5e19 100644
+--- a/security/selinux/ss/avtab.c
++++ b/security/selinux/ss/avtab.c
+@@ -516,6 +516,7 @@ int avtab_read_item(struct avtab *a, void *fp, struct policydb *pol,
+ 		if (avtab_android_m_compat ||
+ 			    ((xperms.specified != AVTAB_XPERMS_IOCTLFUNCTION) &&
+ 			    (xperms.specified != AVTAB_XPERMS_IOCTLDRIVER) &&
++			    (xperms.specified != AVTAB_XPERMS_NLMSG) &&
+ 			    (vers == POLICYDB_VERSION_XPERMS_IOCTL))) {
+ 			xperms.driver = xperms.specified;
+ 			if (android_m_compat_optype)
+@@ -535,6 +536,12 @@ int avtab_read_item(struct avtab *a, void *fp, struct policydb *pol,
+ 			printk(KERN_ERR "SELinux: avtab: truncated entry\n");
+ 			return rc;
+ 		}
++		/*
++		 * Netlink message xperms (Android 15+ policies) are not
++		 * enforced by this kernel; the entry has been consumed, drop it.
++		 */
++		if (xperms.specified == AVTAB_XPERMS_NLMSG)
++			return 0;
+ 		for (i = 0; i < ARRAY_SIZE(xperms.perms.p); i++)
+ 			xperms.perms.p[i] = le32_to_cpu(buf32[i]);
+ 		datum.u.xperms = &xperms;
+diff --git a/security/selinux/ss/avtab.h b/security/selinux/ss/avtab.h
+index 8133523c..95dffe5f 100644
+--- a/security/selinux/ss/avtab.h
++++ b/security/selinux/ss/avtab.h
+@@ -57,6 +57,8 @@ struct avtab_extended_perms {
+ /* These are not flags. All 256 values may be used */
+ #define AVTAB_XPERMS_IOCTLFUNCTION	0x01
+ #define AVTAB_XPERMS_IOCTLDRIVER	0x02
++/* netlink message types (Android 15+ policies, read and dropped) */
++#define AVTAB_XPERMS_NLMSG	0x03
+ 	/* extension of the avtab_key specified */
+ 	u8 specified; /* ioctl, netfilter, ... */
+ 	/*
+-- 
+2.53.0
+

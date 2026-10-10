@@ -1,0 +1,39 @@
+From: qcom-toolbox <169756160+qcom-toolbox@users.noreply.github.com>
+Subject: [PATCH] base_vendor: let devices skip the health BPF filter
+
+The vendor BPF loader treats a failure to load filterPowerSupplyEvents.o
+as fatal and reboots. Kernels whose verifier rejects it can opt out with
+TARGET_HEALTH_SKIP_BPF_FILTER; libhealthloop runs without the filter.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+diff --git a/target/product/base_vendor.mk b/target/product/base_vendor.mk
+index fe48a30..64a0179 100644
+--- a/target/product/base_vendor.mk
++++ b/target/product/base_vendor.mk
+@@ -80,7 +80,11 @@ PRODUCT_PACKAGES += \
+ # libhealthloop BPF filter. This is in base_vendor.mk because libhealthloop must
+ # be a static library and because the Android build system ignores 'required'
+ # sections for static libraries.
++# Devices whose kernel verifier rejects the filter can opt out; libhealthloop
++# runs without it, but the vendor BPF loader treats a failure as fatal.
++ifneq ($(TARGET_HEALTH_SKIP_BPF_FILTER),true)
+ PRODUCT_PACKAGES += filterPowerSupplyEvents.o
++endif
+ 
+ # Base modules when shipping api level is less than or equal to 34
+ PRODUCT_PACKAGES_SHIPPING_API_LEVEL_34 += \
+diff --git a/tools/releasetools/common.py b/tools/releasetools/common.py
+index e5e2c96..bceee2f 100644
+--- a/tools/releasetools/common.py
++++ b/tools/releasetools/common.py
+@@ -1115,6 +1115,9 @@ class PartitionBuildProps(object):
+     """
+     data = ''
+     partition_map = PartitionMapFromTargetFiles(input_file)
++    if name not in partition_map:
++      # e.g. BUILD_WITHOUT_VENDOR targets have no VENDOR/ in target files
++      return data
+     for prop_file in ['{}/etc/build.prop'.format(partition_map[name]),
+                       '{}/build.prop'.format(partition_map[name])]:
+       try:

@@ -1,0 +1,25 @@
+From: qcom-toolbox <169756160+qcom-toolbox@users.noreply.github.com>
+Subject: [PATCH] init: reboot to recovery even without a misc partition
+
+On devices without a misc partition writing the BCB fails, and init
+returned without rebooting at all. Samsung bootloaders select recovery
+from the kernel reboot reason, so log the failure and carry on.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01YHmiQGxHgHmd9D8TNUemvH
+---
+diff --git a/init/reboot.cpp b/init/reboot.cpp
+index a1eecbf..d686cdb 100644
+--- a/init/reboot.cpp
++++ b/init/reboot.cpp
+@@ -1124,8 +1124,9 @@ void HandlePowerctlMessage(const std::string& command) {
+                 if (!CommandIsPresent(&boot)) {
+                     strlcpy(boot.command, "boot-recovery", sizeof(boot.command));
+                     if (std::string err; !write_bootloader_message(boot, &err)) {
++                        // Devices without a misc partition (e.g. Samsung, whose
++                        // bootloader takes the kernel reboot reason) still reboot.
+                         LOG(ERROR) << "Failed to set bootloader message: " << err;
+-                        return;
+                     }
+                 }
+             } else if (std::find(cmd_params.begin(), cmd_params.end(), "quiescent") !=
